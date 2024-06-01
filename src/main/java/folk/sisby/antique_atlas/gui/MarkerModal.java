@@ -169,7 +169,7 @@ public class MarkerModal extends Component {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float partialTick) {
-        this.renderBackground(context);
+        this.renderInGameBackground(context);
         drawCentered(context, Text.translatable("gui.antique_atlas.marker.label"), this.height / 2 - 80, 0xDDDDDD, true);
         textField.render(context, mouseX, mouseY, partialTick);
         // Darker background for marker type selector

@@ -67,16 +67,16 @@ public class ScrollBoxComponent extends Component {
     }
 
     @Override
-    public boolean mouseScrolled(double mx, double my, double wheelMove) {
-        if (isMouseOver(mx, my)) {
-            if (wheelMove != 0) {
-                wheelMove = wheelMove > 0 ? -1 : 1;
-                doSetScrollPos((int) (scrollPos + wheelMove * scrollStep));
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (isMouseOver(mouseX, mouseY)) {
+            if (verticalAmount != 0) {
+                verticalAmount = verticalAmount > 0 ? -1 : 1;
+                doSetScrollPos((int) (scrollPos + verticalAmount * scrollStep));
                 return true;
             }
         }
 
-        return super.mouseScrolled(mx, my, wheelMove);
+        return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
     }
 
     /**

@@ -268,9 +268,9 @@ public class Component extends Screen {
     }
 
     @Override
-    public boolean mouseScrolled(double mx, double my, double dy) {
-        if (!iterateMouseInput((c) -> c.mouseScrolled(mx, my, dy))) {
-            return super.mouseScrolled(mx, my, dy);
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
+        if (!iterateMouseInput((c) -> c.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount))) {
+            return super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount);
         } else {
             return true;
         }
@@ -328,6 +328,9 @@ public class Component extends Screen {
             }
         }
     }
+
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) { }
 
     /**
      * Called when the GUI is unloaded, called for each child as well.

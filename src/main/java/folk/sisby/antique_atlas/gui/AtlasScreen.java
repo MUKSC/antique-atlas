@@ -52,14 +52,17 @@ import java.util.UUID;
 
 public class AtlasScreen extends Component {
     public static final Identifier BOOK = AntiqueAtlas.id("textures/gui/book.png");
-    public static final Identifier BOOK_FULLSCREEN = AntiqueAtlas.id("textures/gui/book_fullscreen.png");
-    public static final Identifier BOOK_FULLSCREEN_R = AntiqueAtlas.id("textures/gui/book_fullscreen_r.png");
+    public static final Identifier BOOK_FULLSCREEN_L = AntiqueAtlas.id("book_fullscreen_l");
+    public static final Identifier BOOK_FULLSCREEN_C = AntiqueAtlas.id("book_fullscreen_c");
+    public static final Identifier BOOK_FULLSCREEN_R = AntiqueAtlas.id("book_fullscreen_r");
     public static final Identifier BOOK_FRAME = AntiqueAtlas.id("textures/gui/book_frame.png");
-    public static final Identifier BOOK_FRAME_FULLSCREEN = AntiqueAtlas.id("textures/gui/book_frame_fullscreen.png");
-    public static final Identifier BOOK_FRAME_FULLSCREEN_R = AntiqueAtlas.id("textures/gui/book_frame_fullscreen_r.png");
+    public static final Identifier BOOK_FRAME_FULLSCREEN_L = AntiqueAtlas.id("book_frame_fullscreen_l");
+    public static final Identifier BOOK_FRAME_FULLSCREEN_C = AntiqueAtlas.id("book_frame_fullscreen_c");
+    public static final Identifier BOOK_FRAME_FULLSCREEN_R = AntiqueAtlas.id("book_frame_fullscreen_r");
     public static final Identifier BOOK_FRAME_NARROW = AntiqueAtlas.id("textures/gui/book_frame_narrow.png");
-    public static final Identifier BOOK_FRAME_NARROW_FULLSCREEN = AntiqueAtlas.id("textures/gui/book_frame_narrow_fullscreen.png");
-    public static final Identifier BOOK_FRAME_NARROW_FULLSCREEN_R = AntiqueAtlas.id("textures/gui/book_frame_narrow_fullscreen_r.png");
+    public static final Identifier BOOK_FRAME_NARROW_FULLSCREEN_L = AntiqueAtlas.id("book_frame_narrow_fullscreen_l");
+    public static final Identifier BOOK_FRAME_NARROW_FULLSCREEN_C = AntiqueAtlas.id("book_frame_narrow_fullscreen_c");
+    public static final Identifier BOOK_FRAME_NARROW_FULLSCREEN_R = AntiqueAtlas.id("book_frame_narrow_fullscreen_r");
     public static final Identifier PLAYER = AntiqueAtlas.id("textures/gui/player.png");
     public static final Identifier ERASER = AntiqueAtlas.id("textures/gui/eraser.png");
     public static final Identifier ICON_ADD_MARKER = AntiqueAtlas.id("textures/gui/icons/add_marker.png");
@@ -379,12 +382,12 @@ public class AtlasScreen extends Component {
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double wheelMove) {
+    public boolean mouseScrolled(double mouseX, double mouseY, double horizontalAmount, double verticalAmount) {
         updateMouse(mouseX, mouseY);
-        if (super.mouseScrolled(mouseX, mouseY, wheelMove)) return true;
-        if (markerModal.getParent() == null && wheelMove != 0) {
-            int direction = wheelMove > 0 ? 1 : -1;
-            if ((wheelMove > 0 ? zoomIn(true, (16 << AntiqueAtlas.CONFIG.maxTilePixels)) : zoomOut(true, 1 << AntiqueAtlas.CONFIG.maxTileChunks)) && (isMouseOverMap || isDragging)) { // Keep mouse over the same block.
+        if (super.mouseScrolled(mouseX, mouseY, horizontalAmount, verticalAmount)) return true;
+        if (markerModal.getParent() == null && verticalAmount != 0) {
+            int direction = verticalAmount > 0 ? 1 : -1;
+            if ((verticalAmount > 0 ? zoomIn(true, (16 << AntiqueAtlas.CONFIG.maxTilePixels)) : zoomOut(true, 1 << AntiqueAtlas.CONFIG.maxTileChunks)) && (isMouseOverMap || isDragging)) { // Keep mouse over the same block.
                 double xOffset = (getGuiX() + MAP_BORDER_WIDTH + (double) mapWidth / 2 - mouseX) * direction;
                 double yOffset = (getGuiY() + MAP_BORDER_HEIGHT + (double) mapHeight / 2 - mouseY) * direction;
                 if (Math.abs(xOffset) > 5 || Math.abs(yOffset) > 5) { // Stay centered if mouse is roughly in the center (e.g. on a centered player pin)
@@ -534,15 +537,15 @@ public class AtlasScreen extends Component {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float par3) {
-        super.renderBackground(context);
+        this.renderInGameBackground(context);
         mapScale = getMapScale();
 
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (fullscreen) {
             int left_width = bookWidth / 2 - 15;
-            context.drawNineSlicedTexture(BOOK_FULLSCREEN, getGuiX(), getGuiY(), left_width, bookHeight, 50, 140, 218, 0, 0);
-            context.drawNineSlicedTexture(BOOK_FULLSCREEN, getGuiX() + left_width, getGuiY(), 29, bookHeight, 50, 29, 218, 140, 0);
-            context.drawNineSlicedTexture(BOOK_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), left_width + 1, bookHeight, 50, 140, 218, 0, 0);
+            context.drawGuiTexture(BOOK_FULLSCREEN_L, getGuiX(), getGuiY(), 0, left_width, bookHeight);
+            context.drawGuiTexture(BOOK_FULLSCREEN_C, getGuiX() + left_width, getGuiY(), 0, 29, bookHeight);
+            context.drawGuiTexture(BOOK_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), 0, left_width + 1, bookHeight);
         } else {
             context.drawTexture(BOOK, getGuiX(), getGuiY(), 0, 0, 310, 218, 310, 218);
         }
@@ -600,9 +603,9 @@ public class AtlasScreen extends Component {
         RenderSystem.setShaderColor(1, 1, 1, 1);
         if (fullscreen) {
             int left_width = bookWidth / 2 - 15;
-            context.drawNineSlicedTexture(BOOK_FRAME_FULLSCREEN, getGuiX(), getGuiY(), left_width, bookHeight, 50, 140, 218, 0, 0);
-            context.drawNineSlicedTexture(BOOK_FRAME_FULLSCREEN, getGuiX() + left_width, getGuiY(), 29, bookHeight, 50, 29, 218, 140, 0);
-            context.drawNineSlicedTexture(BOOK_FRAME_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), left_width + 1, bookHeight, 50, 140, 218, 0, 0);
+            context.drawGuiTexture(BOOK_FRAME_FULLSCREEN_L, getGuiX(), getGuiY(), 0, left_width, bookHeight);
+            context.drawGuiTexture(BOOK_FRAME_FULLSCREEN_C, getGuiX() + left_width, getGuiY(), 0, 29, bookHeight);
+            context.drawGuiTexture(BOOK_FRAME_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), 0, left_width + 1, bookHeight);
         } else {
             context.drawTexture(BOOK_FRAME, getGuiX(), getGuiY(), 0, 0, 310, 218, 310, 218);
         }
@@ -652,9 +655,9 @@ public class AtlasScreen extends Component {
 
         if (fullscreen) {
             int left_width = bookWidth / 2 - 15;
-            context.drawNineSlicedTexture(BOOK_FRAME_NARROW_FULLSCREEN, getGuiX(), getGuiY(), left_width, bookHeight, 50, 140, 218, 0, 0);
-            context.drawNineSlicedTexture(BOOK_FRAME_NARROW_FULLSCREEN, getGuiX() + left_width, getGuiY(), 29, bookHeight, 50, 29, 218, 140, 0);
-            context.drawNineSlicedTexture(BOOK_FRAME_NARROW_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), left_width + 1, bookHeight, 50, 140, 218, 0, 0);
+            context.drawGuiTexture(BOOK_FRAME_NARROW_FULLSCREEN_L, getGuiX(), getGuiY(), 0, left_width, bookHeight);
+            context.drawGuiTexture(BOOK_FRAME_NARROW_FULLSCREEN_C, getGuiX() + left_width, getGuiY(), 0, 29, bookHeight);
+            context.drawGuiTexture(BOOK_FRAME_NARROW_FULLSCREEN_R, getGuiX() + left_width + 29, getGuiY(), 0, left_width + 1, bookHeight);
         } else {
             context.drawTexture(BOOK_FRAME_NARROW, getGuiX(), getGuiY(), 0, 0, 310, 218, 310, 218);
         }
